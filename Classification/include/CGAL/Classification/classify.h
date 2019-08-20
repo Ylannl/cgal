@@ -27,6 +27,7 @@
 #include <CGAL/boost/graph/alpha_expansion_graphcut.h>
 #include <CGAL/Bbox_3.h>
 #include <CGAL/Classification/Label_set.h>
+#include <CGAL/property_map.h>
 
 #ifdef CGAL_LINKED_WITH_TBB
 #include <tbb/parallel_for.h>
