@@ -571,7 +571,7 @@ double alpha_expansion_graphcut (const InputGraph& input_graph,
   std::vector<Vertex_descriptor> inserted_vertices;
   inserted_vertices.resize(num_vertices (input_graph));
 
-  std::size_t number_of_labels = get(vertex_label_cost_map, *std::begin(vertices(input_graph))).size();
+  std::size_t number_of_labels = get(vertex_label_cost_map, *vertices(input_graph).first).size();
 
   bool success;
   do {
@@ -588,8 +588,10 @@ double alpha_expansion_graphcut (const InputGraph& input_graph,
 
       // For E-Data
       // add every input vertex as a vertex to the graph, put edges to source & sink vertices
-      for (input_vertex_descriptor vd : vertices(input_graph))
+      auto it_pair = vertices(input_graph);
+      for (auto vd_ = it_pair.first; vd_ != it_pair.second; ++vd_ )
       {
+        input_vertex_descriptor vd = *vd_;
         std::size_t vertex_i = get(vertex_index_map, vd);
         Vertex_descriptor new_vertex = alpha_expansion.add_vertex();
         inserted_vertices[vertex_i] = new_vertex;
@@ -609,8 +611,10 @@ double alpha_expansion_graphcut (const InputGraph& input_graph,
 
       // For E-Smooth
       // add edge between every vertex,
-      for (input_edge_descriptor ed : edges(input_graph))
+      auto it_pair_edges = edges(input_graph);
+      for (auto ed_ = it_pair_edges.first; ed_ != it_pair_edges.second; ++ed_)
       {
+        input_edge_descriptor ed = *ed_;
         input_vertex_descriptor vd1 = source(ed, input_graph);
         input_vertex_descriptor vd2 = target(ed, input_graph);
         std::size_t idx1 = get (vertex_index_map, vd1);
@@ -659,8 +663,10 @@ double alpha_expansion_graphcut (const InputGraph& input_graph,
       min_cut = flow;
       success = true;
       //update labeling
-      for (input_vertex_descriptor vd : vertices (input_graph))
+      auto it_pair_v = vertices(input_graph);
+      for ( auto vd_ = it_pair_v.first; vd_ != it_pair_v.second; ++vd_)
       {
+        input_vertex_descriptor vd = *vd_;
         std::size_t vertex_i = get (vertex_index_map, vd);
         alpha_expansion.update(vertex_label_map, inserted_vertices, vd, vertex_i, alpha);
       }
